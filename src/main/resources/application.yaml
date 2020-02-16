@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: "jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/tabula?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false&createDatabaseIfNotExist=true"
+    username: "${DB_USER:root}"
+    password: "${DB_PASSWORD:}"
+    continueOnError: true
+    driver-class-name: "com.mysql.cj.jdbc.Driver"
+    hikari:
+      connection-test-query: SELECT 1
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    hibernate:
+      ddl-auto: validate
