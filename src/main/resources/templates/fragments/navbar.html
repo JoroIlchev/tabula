@@ -10,7 +10,7 @@
 <body>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary" th:fragment="navbar">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" th:fragment="navbar(activeTab)">
 
   <!-- Project name -->
   <a class="navbar-brand" href="#">Tabula</a>
@@ -27,17 +27,17 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home</a>
+      <li class="nav-item" th:classappend="${activeTab == 'home'}? 'active'">
+        <a class="nav-link" th:href="@{/home}">Home</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Announcements</a>
+      <li class="nav-item" th:classappend="${activeTab == 'announcements'}? 'active'">
+        <a class="nav-link" th:href="@{/announcements}">Announcements</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Events</a>
+      <li class="nav-item" th:classappend="${activeTab == 'events'}? 'active'">
+        <a class="nav-link" th:href="@{/events}">Events</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Subscriptions</a>
+      <li class="nav-item" th:classappend="${activeTab == 'subscriptions'}? 'active'">
+        <a class="nav-link" th:href="@{/subscriptions}">Subscriptions</a>
       </li>
     </ul>
   </div>

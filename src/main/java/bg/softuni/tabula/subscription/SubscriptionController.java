@@ -1,15 +1,16 @@
-package bg.softuni.tabula.announcement;
+package bg.softuni.tabula.subscription;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class AnnouncementController {
+public class SubscriptionController {
 
-  @GetMapping("/announcements")
+  @GetMapping("/subscriptions")
   public String announcement(Model model) {
-    model.addAttribute("active", "announcements");
-    return "announcement/announcements";
+    model.addAttribute("active", "subscriptions");
+    return "subscription/subscriptions";
   }
+
 }
