@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <title>Tabula</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-</head>
+<head th:replace="fragments/head :: head"></head>
 <body>
 
 <!-- Navbar -->
@@ -13,7 +9,7 @@
 
 Welcome to the announcement board!
 
-<a class="btn btn-primary" href="#" role="button">Create new</a>
+<a class="btn btn-primary" th:href="@{/announcements/new}" role="button">Create new</a>
 
 <!-- Bootstap JS -->
 <div th:replace="fragments/bootstrap-js :: bootstrap-js"></div>
