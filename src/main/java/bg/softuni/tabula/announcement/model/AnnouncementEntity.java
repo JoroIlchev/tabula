@@ -15,7 +15,6 @@ import javax.validation.constraints.NotNull;
 public class AnnouncementEntity {
 
   @Id
-  @NotNull
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 

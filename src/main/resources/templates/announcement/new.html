@@ -7,15 +7,17 @@
 <div th:replace="fragments/navbar :: navbar('announcements')">Navbar here</div>
 <!-- EO: Navbar -->
 
-<form method="post" th:object="${formData}">
+<form th:action="@{/announcements/save}" method="post" th:object="${formData}">
   <div class="form-group">
     <label for="announcmentTitle">Title</label>
-    <input type="text" class="form-control" id="announcmentTitle"/>
+    <input type="text" class="form-control" id="announcmentTitle" th:field="*{title}"/>
   </div>
 
   <div class="form-group">
     <label for="announcmentDescription">Description</label>
-    <textarea class="form-control" id="announcmentDescription" rows="5"></textarea>
+    <textarea class="form-control" id="announcmentDescription" rows="5" th:field="*{description}">
+
+    </textarea>
   </div>
 
   <button type="submit" class="btn btn-primary">Submit</button>
