@@ -5,6 +5,8 @@ import bg.softuni.tabula.announcement.dto.AnnouncementMapper;
 import bg.softuni.tabula.announcement.model.AnnouncementEntity;
 import bg.softuni.tabula.announcement.repository.AnnouncementRepository;
 import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,5 +28,14 @@ public class AnnouncementService {
     announcement.setUpdatedOn(Instant.now());
 
     announcementRepository.save(announcement);
+  }
+
+  public List<AnnouncementDTO> findAll() {
+    // todo pageable
+    return announcementRepository.
+        findAll().
+        stream().
+        map(AnnouncementMapper.INSTANCE::mapAnnouncementEntityToDto).
+        collect(Collectors.toList());
   }
 }

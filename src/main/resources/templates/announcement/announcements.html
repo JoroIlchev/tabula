@@ -7,9 +7,23 @@
 <div th:replace="fragments/navbar :: navbar('announcements')">Navbar here</div>
 <!-- EO: Navbar -->
 
-Welcome to the announcement board!
+<div class="my-2 d-flex justify-content-center">
+  <h2>Welcome to the announcement board!</h2>
+</div>
 
-<a class="btn btn-primary" th:href="@{/announcements/new}" role="button">Create new</a>
+<div class="container">
+  <div th:object="${announcement}" th:each="announcement: ${announcements}" class="my-3 card">
+    <div th:text="*{title}" class="card-header">
+      Announcement title
+    </div>
+    <div class="card-body">
+      <h5 class="card-title"></h5>
+      <p th:text="*{description}" class="card-text"></p>
+    </div>
+  </div>
+</div>
+
+<a class="new-button btn btn-primary rounded-circle" th:href="@{/announcements/new}" role="button">+</a>
 
 <!-- Bootstap JS -->
 <div th:replace="fragments/bootstrap-js :: bootstrap-js"></div>

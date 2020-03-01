@@ -1,9 +1,6 @@
 package bg.softuni.tabula.announcement;
 
 import bg.softuni.tabula.announcement.dto.AnnouncementDTO;
-import bg.softuni.tabula.announcement.dto.AnnouncementMapper;
-import bg.softuni.tabula.announcement.model.AnnouncementEntity;
-import bg.softuni.tabula.announcement.repository.AnnouncementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +21,8 @@ public class AnnouncementController {
   @GetMapping("/announcements")
   public String announcement(Model model) {
     model.addAttribute("active", "announcements");
+    model.addAttribute("announcements",
+        announcementService.findAll());
     return "announcement/announcements";
   }
 
