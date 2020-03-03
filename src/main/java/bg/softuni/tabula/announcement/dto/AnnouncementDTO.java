@@ -3,7 +3,8 @@ package bg.softuni.tabula.announcement.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.Instant;
 import java.util.Objects;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AnnouncementDTO {
@@ -14,10 +15,11 @@ public class AnnouncementDTO {
 
   private Instant updatedOn;
 
-  @NotNull
+  @NotBlank
   private String title;
 
-  @NotNull
+  @NotBlank
+  @Size(min=10, message = "The description should be more than 10 characters.")
   private String description;
 
   public Long getId() {

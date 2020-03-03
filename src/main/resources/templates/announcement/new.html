@@ -7,21 +7,37 @@
 <div th:replace="fragments/navbar :: navbar('announcements')">Navbar here</div>
 <!-- EO: Navbar -->
 
-<form th:action="@{/announcements/save}" method="post" th:object="${formData}">
-  <div class="form-group">
-    <label for="announcmentTitle">Title</label>
-    <input type="text" class="form-control" id="announcmentTitle" th:field="*{title}"/>
-  </div>
+<div class="container">
+  <form th:action="@{/announcements/save}" method="post" th:object="${formData}">
+    <div class="form-group">
+      <label for="announcmentTitle">Title</label>
+      <input type="text"
+             placeholder="Title"
+             class="form-control"
+             th:classappend="${#fields.hasErrors('title')}? 'is-invalid'"
+             id="announcmentTitle"
+             th:field="*{title}"/>
+      <div class="invalid-feedback">
+        Please fill in a title.
+      </div>
+    </div>
 
-  <div class="form-group">
-    <label for="announcmentDescription">Description</label>
-    <textarea class="form-control" id="announcmentDescription" rows="5" th:field="*{description}">
+    <div class="form-group">
+      <label for="announcmentDescription">Description</label>
+      <textarea class="form-control"
+                placeholder="Description"
+                th:classappend="${#fields.hasErrors('description')}? 'is-invalid'"
+                id="announcmentDescription"
+                rows="5"
+                th:field="*{description}"></textarea>
+      <div class="invalid-feedback">
+        The description should be longer than 10 characters.
+      </div>
+    </div>
 
-    </textarea>
-  </div>
-
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
 
 <!-- Bootstap JS -->
 <div th:replace="fragments/bootstrap-js :: bootstrap-js"></div>
