@@ -11,3 +11,16 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5Dialect
     hibernate:
       ddl-auto: create-drop
+  security:
+    oauth2:
+      client:
+        registration:
+          facebook:
+            client-id: 596493257866350
+            #TODO - hide this as enc variable
+            client-secret: TODO
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG

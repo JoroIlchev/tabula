@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+  <title>TODO</title>
+</head>
+<body>
+
+<div>
+
+  <form id="signin" th:action="@{/login/authenticate}" method="post">
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}"></input>
+    <div class="formInfo">
+      <div class="error" th:if="${param.error eq 'bad_credentials'}">
+        Your login in information was incorrect.
+        Please try again or <a th:href="@{/signup}">sign up</a>.
+      </div>
+    </div>
+    <fieldset class="loginForm">
+      <label for="login">Username</label>
+      <input id="login" name="username" type="text" size="25"></input><br/>
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" size="25"></input>
+      <br/><br/>
+      <button type="submit" class="btn btn-form">Login In</button>
+    </fieldset>
+    <br/>
+
+    <p>A user and password pair that you may use:</p>
+    <ul>
+      <li>lucho@example.com/topsecret</li>
+    </ul>
+
+    <p>Or you can <a th:href="@{/signup}">signup</a> with a new account.</p>
+  </form>
+
+  <!-- FACEBOOK SIGNIN -->
+  <form th:action="@{/signin/facebook}" method="POST">
+    <button type="submit">
+      Sign In With Facebook
+    </button>
+  </form>
+
+</div>
+</body>
+</html>
