@@ -18,7 +18,7 @@ spring:
           facebook:
             client-id: 596493257866350
             #TODO - hide this as enc variable
-            client-secret: TODO
+            client-secret: ca6fe34eef6aa0cecd5e591b388631d4
 
 logging:
   level:

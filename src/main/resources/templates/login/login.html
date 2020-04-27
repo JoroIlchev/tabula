@@ -34,12 +34,9 @@
   </form>
 
   <!-- FACEBOOK SIGNIN -->
-  <form th:action="@{/signin/facebook}" method="POST">
-    <button type="submit">
-      Sign In With Facebook
-    </button>
-  </form>
-
+  <div>
+    <a th:href="@{/oauth2/authorization/facebook}">Sign in with Facebook</a>
+  </div>
 </div>
 </body>
 </html>
