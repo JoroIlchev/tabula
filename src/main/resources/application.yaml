@@ -19,7 +19,8 @@ spring:
             client-id: 596493257866350
             #TODO - hide this as enc variable
             client-secret: senko
-
+  thymeleaf:
+    cache: false
 logging:
   level:
     org.springframework.web: DEBUG

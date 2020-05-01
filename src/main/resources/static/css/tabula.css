@@ -4,9 +4,10 @@
   right: 10px;
 }
 
-.vertical-center {
+.center {
   margin: 0;
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
