@@ -1,42 +1,64 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org">
-<head>
-  <title>TODO</title>
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="fragments/head :: head"></head>
 <body>
 
-<div>
-
-  <form id="signin" th:action="@{/login/authenticate}" method="post">
-    <input type="hidden" name="_csrf" th:value="${_csrf.token}"></input>
-    <div class="formInfo">
-      <div class="error" th:if="${param.error eq 'bad_credentials'}">
-        Your login in information was incorrect.
-        Please try again or <a th:href="@{/signup}">sign up</a>.
-      </div>
-    </div>
-    <fieldset class="loginForm">
-      <label for="login">Username</label>
-      <input id="login" name="username" type="text" size="25"></input><br/>
-      <label for="password">Password</label>
-      <input id="password" name="password" type="password" size="25"></input>
-      <br/><br/>
-      <button type="submit" class="btn btn-form">Login In</button>
-    </fieldset>
-    <br/>
-
-    <p>A user and password pair that you may use:</p>
-    <ul>
-      <li>lucho@example.com/topsecret</li>
-    </ul>
-
-    <p>Or you can <a th:href="@{/signup}">signup</a> with a new account.</p>
-  </form>
-
+<div class="container vertical-center">
   <!-- FACEBOOK SIGNIN -->
-  <div>
-    <a th:href="@{/oauth2/authorization/facebook}">Sign in with Facebook</a>
+  <div class="card">
+    <article class="card-body">
+      <a href="#" class="float-right btn btn-outline-primary">Sign up</a>
+      <h4 class="card-title mb-4 mt-1">Sign in</h4>
+      <p>
+        <a th:href="@{/oauth2/authorization/facebook}"
+           class="btn btn-block btn-outline-primary">
+          <i class="fab fa-facebook-f"></i>
+          Login via facebook
+        </a>
+      </p>
+      <hr>
+      <form th:action="@{/login/authenticate}" method="post">
+        <div class="form-group">
+          <label for="userEmail">Email</label>
+          <input
+              name="username"
+              type="email"
+              placeholder="Email"
+              class="form-control"
+              id="userEmail"/>
+        </div> <!-- form-group// -->
+        <div class="form-group">
+          <label for="userPassword">Password</label>
+          <input
+              name="password"
+              type="password"
+              placeholder="Password"
+              class="form-control"
+              id="userPassword"/>
+        </div> <!-- form-group// -->
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </div> <!-- form-group// -->
+          </div>
+          <div class="col-md-6 text-right">
+            <a class="small" href="#">Forgot password?</a>
+          </div>
+        </div> <!-- .row// -->
+      </form>
+    </article>
+  </div> <!-- card.// -->
+
+  <!-- Demo credentials -->
+  <div class="container">
+    A user and password pair that you may use: lucho@example.com/topsecret
   </div>
+  <!-- EO: Demo credentials -->
+
+  <!-- Bootstap JS -->
+  <div th:replace="fragments/bootstrap-js :: bootstrap-js"></div>
+  <!-- EO: Bootstap JS -->
 </div>
 </body>
 </html>

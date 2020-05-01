@@ -27,7 +27,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/util/AntPathMatcher.html
 
     http
-        .formLogin()
+        .authorizeRequests()
+        .antMatchers("/login**", "/favicon.ico").permitAll()
+        .antMatchers("/**")
+        .authenticated().
+        and()
+          .formLogin()
           .loginPage("/login")
           .loginProcessingUrl("/login/authenticate")
           .failureUrl("/login?param.error=bad_credentials")
@@ -36,11 +41,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
           .logout()
           .logoutUrl("/logout")
           .deleteCookies("JSESSIONID").
-        and()
-          .authorizeRequests()
-          .antMatchers("/login**", "/favicon.ico").permitAll()
-          .antMatchers("/**")
-          .authenticated().
         and().
           oauth2Login().
           loginPage("/login").
