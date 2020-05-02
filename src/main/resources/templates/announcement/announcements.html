@@ -3,6 +3,14 @@
 <head th:replace="fragments/head :: head"></head>
 <body>
 
+<!-- Behaviour -->
+<script>
+  $(document).on("click", ".open-delete-dialog", function () {
+    $("#deleteId").val($(this).data('id'));
+  });
+</script>
+<!-- EO: Behaviour-->
+
 <!-- Navbar -->
 <div th:replace="fragments/navbar :: navbar('announcements')">Navbar here</div>
 <!-- EO: Navbar -->
@@ -26,7 +34,11 @@
           </small>
         </div>
         <div>
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleteModal">
+          <button type="button"
+                  class="open-delete-dialog btn btn-primary"
+                  data-toggle="modal"
+                  data-target="#deleteModal"
+                  th:data-id="*{id}">
               <i class="fas fa-trash mx-1"></i>
           </button>
         </div>

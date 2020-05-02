@@ -6,11 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/announcements")
 public class AnnouncementController {
 
   private final AnnouncementService announcementService;
@@ -21,7 +25,7 @@ public class AnnouncementController {
     this.announcementService = announcementService;
   }
 
-  @GetMapping("/announcements")
+  @GetMapping
   public String announcement(Model model) {
     model.addAttribute("active", "announcements");
     model.addAttribute("announcements",
@@ -29,14 +33,14 @@ public class AnnouncementController {
     return "announcement/announcements";
   }
 
-  @GetMapping("/announcements/new")
+  @GetMapping("/new")
   public String newAnnouncement(Model model) {
     model.addAttribute("active", "announcements");
     model.addAttribute("formData", new AnnouncementDTO());
     return "announcement/new";
   }
 
-  @PostMapping("/announcements/save")
+  @PostMapping("/save")
   public String save(@Valid @ModelAttribute("formData") AnnouncementDTO announcementDTO,
       BindingResult bindingResult) {
 
@@ -45,6 +49,17 @@ public class AnnouncementController {
     }
 
     announcementService.udpateOrCreateAnnouncement(announcementDTO);
+
+    return "redirect:/announcements";
+  }
+
+  @PostMapping("/delete")
+  public String delete(@ModelAttribute(name="deleteId") Long announcementId) {
+
+    // In the REST world this would be a delete mapping but here this is not the case
+    // Have a look at: https://softwareengineering.stackexchange.com/questions/114156/why-are-there-are-no-put-and-delete-methods-on-html-forms
+
+    announcementService.deleteAnnouncement(announcementId);
 
     return "redirect:/announcements";
   }
