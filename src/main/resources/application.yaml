@@ -8,7 +8,6 @@ spring:
     hikari:
       connection-test-query: SELECT 1
   jpa:
-    database-platform: org.hibernate.dialect.MySQL5Dialect
     hibernate:
       ddl-auto: create-drop
   security:
