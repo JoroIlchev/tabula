@@ -53,11 +53,8 @@ public class AnnouncementController {
     return "redirect:/announcements";
   }
 
-  @PostMapping("/delete")
+  @DeleteMapping("/delete")
   public String delete(@ModelAttribute(name="deleteId") Long announcementId) {
-
-    // In the REST world this would be a delete mapping but here this is not the case
-    // Have a look at: https://softwareengineering.stackexchange.com/questions/114156/why-are-there-are-no-put-and-delete-methods-on-html-forms
 
     announcementService.deleteAnnouncement(announcementId);
 

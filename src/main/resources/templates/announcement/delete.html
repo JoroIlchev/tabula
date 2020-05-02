@@ -25,7 +25,7 @@
             <form
                 id="formDelete"
                 th:action="@{/announcements/delete}"
-                method="post">
+                th:method="delete">
               <input id="deleteId" name="deleteId" type="hidden" value=""/>
               <button id="btnDelete" type="submit" class="btn btn-primary">Delete</button>
            </form>
