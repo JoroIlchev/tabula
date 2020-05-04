@@ -26,7 +26,7 @@ public class AnnouncementService {
     this.announcementRepository = announcementRepository;
   }
 
-  public void udpateOrCreateAnnouncement(AnnouncementDTO announcementDTO) {
+  public void updateOrCreateAnnouncement(AnnouncementDTO announcementDTO) {
 
     LOGGER.debug("Creating or updating announcement.");
 
