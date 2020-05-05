@@ -22,7 +22,7 @@ public class EventDTO {
   @NotNull
   private EventType eventType;
 
-  @NotNull
+  @Future
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private LocalDateTime eventTime;
 

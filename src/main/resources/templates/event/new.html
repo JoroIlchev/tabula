@@ -66,6 +66,8 @@
     <div class="form-group">
       <input type="datetime-local"
              id="eventTime"
+             th:field="*{eventTime}"
+             th:classappend="${#fields.hasErrors('eventTime')}? 'is-invalid'"
              name="eventTime">
       <div class="invalid-feedback">
         Event type should be specified and should be in the future.
