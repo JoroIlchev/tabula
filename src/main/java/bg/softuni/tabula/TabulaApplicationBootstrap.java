@@ -2,6 +2,7 @@ package bg.softuni.tabula;
 
 import bg.softuni.tabula.announcement.model.AnnouncementEntity;
 import bg.softuni.tabula.announcement.repository.AnnouncementRepository;
+import bg.softuni.tabula.event.model.EventEntity;
 import bg.softuni.tabula.user.UserEntity;
 import bg.softuni.tabula.user.UserRepository;
 import java.time.Instant;

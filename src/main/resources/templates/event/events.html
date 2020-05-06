@@ -7,7 +7,29 @@
 <div th:replace="fragments/navbar :: navbar('events')">Navbar here</div>
 <!-- EO: Navbar -->
 
-Welcome to Events, comming soon!
+Welcome to events! Calendar with events is comming soon :-)
+
+<div class="container"
+     th:each="week: ${weeks}">
+  <!-- Starts the week row -->
+  <div class="row">
+    <div th:each="day: ${week.getDays()}"
+        class="col-sm">
+      <!-- Empty square -->
+      <span th:if="${day.isEmpty()}">
+        &nbsp;
+      </span>
+      <!-- EO: Empty square -->
+
+      <!-- Day -->
+      <span th:unless="${day.isEmpty()}">
+        <span th:text="${day.getDay()}">Day 1</span>
+      </span>
+      <!-- EO: Day -->
+    </div>
+  </div>
+  <!-- EO: Ends the week row -->
+</div>
 
 <a class="new-button btn btn-primary rounded-circle" th:href="@{/events/new}" role="button">
   <i class="fas fa-plus"></i>

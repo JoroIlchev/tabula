@@ -44,7 +44,7 @@ public class EventsService {
     throw new UnsupportedOperationException("Comming soon!");
   }
 
-  public static List<CalendarWeekDTO> calculateEventsForMonth(YearMonth monthInYear) {
+  public List<CalendarWeekDTO> calculateEventsForMonth(YearMonth monthInYear) {
 
     List<CalendarWeekDTO> result = new ArrayList<>();
     CalendarWeekDTO currentWeek = new CalendarWeekDTO();
@@ -72,26 +72,23 @@ public class EventsService {
     }
 
     // fill in empty
-    boolean addCurrentWeek = false;
-    for (int weekDay = dayInWeek; weekDay < 7; weekDay++) {
-      currentWeek.addDay(CalendarDayDTO.ofEmpty());
-      addCurrentWeek = true;
-    }
-
-    if (addCurrentWeek) {
+    if (dayInWeek > 0) {
+      for (int weekDay = dayInWeek; weekDay < 7; weekDay++) {
+        currentWeek.addDay(CalendarDayDTO.ofEmpty());
+      }
       result.add(currentWeek);
     }
 
     return result;
   }
 
-  private static int getDaysInMonth(YearMonth monthInYear) {
+  private int getDaysInMonth(YearMonth monthInYear) {
     return (int)ChronoUnit.DAYS.between(
         monthInYear.atDay(1),
         monthInYear.atDay(1).plusMonths(1));
   }
 
-  private static int getFirstDayInWeek(YearMonth monthInYear) {
+  private int getFirstDayInWeek(YearMonth monthInYear) {
     return monthInYear.
         atDay(1).
         getDayOfWeek().

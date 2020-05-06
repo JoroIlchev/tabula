@@ -2,6 +2,7 @@ package bg.softuni.tabula.event;
 
 import bg.softuni.tabula.event.dto.EventDTO;
 import bg.softuni.tabula.event.model.EventType;
+import java.time.YearMonth;
 import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +26,9 @@ public class EventController {
   @GetMapping
   public String announcement(Model model) {
     model.addAttribute("active", "events");
+
+    model.addAttribute("weeks", eventsService.
+        calculateEventsForMonth(YearMonth.of(2020, 5)));
     return "event/events";
   }
 
