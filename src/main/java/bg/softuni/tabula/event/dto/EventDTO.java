@@ -3,7 +3,6 @@ package bg.softuni.tabula.event.dto;
 import bg.softuni.tabula.event.model.EventType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

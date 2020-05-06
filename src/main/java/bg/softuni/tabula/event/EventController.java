@@ -1,10 +1,8 @@
 package bg.softuni.tabula.event;
 
-import bg.softuni.tabula.announcement.dto.AnnouncementDTO;
 import bg.softuni.tabula.event.dto.EventDTO;
 import bg.softuni.tabula.event.model.EventType;
 import javax.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -18,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class EventController {
 
-  @Autowired
   private EventsService eventsService;
+
+  public EventController(EventsService eventsService) {
+    this.eventsService = eventsService;
+  }
 
   @GetMapping
   public String announcement(Model model) {
