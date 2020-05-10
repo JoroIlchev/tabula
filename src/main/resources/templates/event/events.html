@@ -23,7 +23,7 @@ Welcome to events! Calendar with events is comming soon :-)
 
       <!-- Day -->
       <div class="calendar-day border rounded" th:unless="${day.isEmpty()}">
-        <div class="border-bottom" th:text="${day.getDay()}">Day 1</div>
+        <div class="calendar-day-title border-bottom" th:text="${day.getDay()}">Day 1</div>
 
         <!-- Events -->
         <div th:if="${day.getEvents().isEmpty()}">

@@ -16,3 +16,7 @@
   margin-top: 10px;
   margin-bottom: 10px;
 }
+
+.calendar-day-title {
+  text-align: center
+}
