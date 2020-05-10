@@ -5,12 +5,16 @@ import bg.softuni.tabula.announcement.dto.AnnouncementMapper;
 import bg.softuni.tabula.announcement.model.AnnouncementEntity;
 import bg.softuni.tabula.event.model.EventEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(uses = {InstantMapper.class})
 public interface EventMapper {
 
   EventMapper INSTANCE = Mappers.getMapper(EventMapper.class);
 
-  EventEntity mapEventDtoToEntity(EventDTO dto);
+  EventEntity mapDtoToEntity(EventDTO dto);
+
+  @Mapping(source = "occurrence", target = "eventTime")
+  EventDTO mapEntityToDto(EventEntity entity);
 }

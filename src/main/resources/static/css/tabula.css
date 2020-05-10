@@ -11,3 +11,8 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+.calendar-day {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}

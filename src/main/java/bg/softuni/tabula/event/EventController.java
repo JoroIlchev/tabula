@@ -2,6 +2,7 @@ package bg.softuni.tabula.event;
 
 import bg.softuni.tabula.event.dto.EventDTO;
 import bg.softuni.tabula.event.model.EventType;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -24,11 +25,18 @@ public class EventController {
   }
 
   @GetMapping
-  public String announcement(Model model) {
+  public String eventts(Model model) {
+
+    //The truth is that we should take care about the
+    //time zone of the user, should be passed in here, but that's too much
+    //for the purpose of this project :-)
+    //TODO - should come as an arg
+    LocalDateTime now = LocalDateTime.now();
+
     model.addAttribute("active", "events");
 
     model.addAttribute("weeks", eventsService.
-        calculateEventsForMonth(YearMonth.of(2020, 5)));
+        getEventsForMonth(YearMonth.of(now.getYear(), now.getMonth())));
     return "event/events";
   }
 

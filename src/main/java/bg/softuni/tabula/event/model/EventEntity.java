@@ -32,8 +32,8 @@ public class EventEntity {
   @Enumerated(EnumType.STRING)
   private EventType eventType;
 
-  @Column(name="next_occurrence")
-  private Instant nextOccurrence;
+  @Column(name="occurrence")
+  private Instant occurrence;
 
   public String getTitle() {
     return title;
@@ -59,12 +59,12 @@ public class EventEntity {
     this.eventType = eventType;
   }
 
-  public Instant getNextOccurrence() {
-    return nextOccurrence;
+  public Instant getOccurrence() {
+    return occurrence;
   }
 
-  public void setNextOccurrence(Instant nextOccurrence) {
-    this.nextOccurrence = nextOccurrence;
+  public void setOccurrence(Instant nextOccurrence) {
+    this.occurrence = nextOccurrence;
   }
 
   public Long getId() {
@@ -88,11 +88,11 @@ public class EventEntity {
         Objects.equals(title, that.title) &&
         Objects.equals(description, that.description) &&
         eventType == that.eventType &&
-        Objects.equals(nextOccurrence, that.nextOccurrence);
+        Objects.equals(occurrence, that.occurrence);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, title, description, eventType, nextOccurrence);
+    return Objects.hash(id, title, description, eventType, occurrence);
   }
 }

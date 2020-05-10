@@ -16,15 +16,28 @@ Welcome to events! Calendar with events is comming soon :-)
     <div th:each="day: ${week.getDays()}"
         class="col-sm">
       <!-- Empty square -->
-      <span th:if="${day.isEmpty()}">
+      <div th:if="${day.isEmpty()}">
         &nbsp;
-      </span>
+      </div>
       <!-- EO: Empty square -->
 
       <!-- Day -->
-      <span th:unless="${day.isEmpty()}">
-        <span th:text="${day.getDay()}">Day 1</span>
-      </span>
+      <div class="calendar-day border rounded" th:unless="${day.isEmpty()}">
+        <div class="border-bottom" th:text="${day.getDay()}">Day 1</div>
+
+        <!-- Events -->
+        <div th:if="${day.getEvents().isEmpty()}">
+          &nbsp;
+        </div>
+
+        <div th:unless="${day.getEvents().isEmpty()}">
+          <div th:each="event: ${day.getEvents()}">
+            <span class="small" th:text="${event.getTitle()}"></span>
+          </div>
+        </div>
+        <!-- EO: Events -->
+
+      </div>
       <!-- EO: Day -->
     </div>
   </div>

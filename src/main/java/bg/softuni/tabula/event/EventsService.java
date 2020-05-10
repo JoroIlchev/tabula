@@ -1,5 +1,7 @@
 package bg.softuni.tabula.event;
 
+import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
+
 import bg.softuni.tabula.event.dto.CalendarDayDTO;
 import bg.softuni.tabula.event.dto.EventDTO;
 import bg.softuni.tabula.event.dto.EventMapper;
@@ -7,11 +9,20 @@ import bg.softuni.tabula.event.dto.CalendarWeekDTO;
 import bg.softuni.tabula.event.model.EventEntity;
 import bg.softuni.tabula.event.repository.EventRepository;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -32,19 +43,13 @@ public class EventsService {
 
     LOGGER.debug("Creating or updating an event.");
 
-    EventEntity eventEntity = EventMapper.INSTANCE.mapEventDtoToEntity(eventDTO);
-
-    // todo recalculate occurence
+    EventEntity eventEntity = EventMapper.INSTANCE.mapDtoToEntity(eventDTO);
     eventRepository.save(eventEntity);
   }
 
-  // todo recalculate the next occurrence
+  public List<CalendarWeekDTO> getEventsForMonth(YearMonth monthInYear) {
 
-  public Optional<Instant> calculateNextOccurrence(EventEntity event) {
-    throw new UnsupportedOperationException("Comming soon!");
-  }
-
-  public List<CalendarWeekDTO> calculateEventsForMonth(YearMonth monthInYear) {
+    Map<Integer, List<EventDTO>> currentEvents = extractEvents(monthInYear);
 
     List<CalendarWeekDTO> result = new ArrayList<>();
     CalendarWeekDTO currentWeek = new CalendarWeekDTO();
@@ -52,7 +57,7 @@ public class EventsService {
     int daysInMonth = getDaysInMonth(monthInYear);
     int dayInWeek = getFirstDayInWeek(monthInYear);
 
-    // fill with empty cells
+    // fill with empty cells at the start of the month
     for (int currentWeekDay = 0; currentWeekDay < dayInWeek; currentWeekDay++) {
       currentWeek.addDay(CalendarDayDTO.ofEmpty());
     }
@@ -60,8 +65,13 @@ public class EventsService {
     // fill in days
     for (int day = 1; day <= daysInMonth; day++) {
 
-      // TODO: Fill in events!
-      currentWeek.addDay(CalendarDayDTO.ofDay(day));
+      CalendarDayDTO dayDTO = CalendarDayDTO.ofDay(day);
+
+      // fill in the events
+      List<EventDTO> daysEvents = currentEvents.getOrDefault(dayDTO.getDay(), Collections.emptyList());
+      dayDTO.setEvents(daysEvents);
+      currentWeek.addDay(dayDTO);
+      //
 
       dayInWeek = (++dayInWeek) % 7;
 
@@ -71,7 +81,7 @@ public class EventsService {
       }
     }
 
-    // fill in empty
+    // fill in empty days at the end of the calendar
     if (dayInWeek > 0) {
       for (int weekDay = dayInWeek; weekDay < 7; weekDay++) {
         currentWeek.addDay(CalendarDayDTO.ofEmpty());
@@ -80,6 +90,64 @@ public class EventsService {
     }
 
     return result;
+  }
+
+  private Map<Integer, List<EventDTO>> extractEvents(YearMonth monthInYear) {
+    List<EventEntity> relevantEvents =
+        eventRepository.findAllRelevantEvents(
+                  atStartOfMonth(monthInYear));
+
+    Map<Integer, List<EventDTO>> result = new HashMap<>();
+
+    relevantEvents.
+        stream().
+        filter(this::isRelevant).
+        forEach(relevantEvent -> {
+          // TODO: multiply weekly events
+          EventDTO event = EventMapper.INSTANCE.mapEntityToDto(relevantEvent);
+
+          int eventDay = event.getEventTime().getDayOfMonth();
+
+          result.putIfAbsent(eventDay, new ArrayList<>());
+          result.get(eventDay).add(event);
+        });
+
+    return result;
+  }
+
+  private boolean isRelevant(EventEntity event) {
+
+    LocalDateTime occurrence = asLocal(event.getOccurrence());
+    LocalDateTime now = LocalDateTime.now();
+
+    switch (event.getEventType()) {
+      case ANNUALLY:
+        return !occurrence.with(firstDayOfMonth()).isAfter(now) &&
+            occurrence.getMonth() == now.getMonth();
+      case MONTHLY:
+      case WEEKLY:
+        return !occurrence.with(firstDayOfMonth()).isAfter(now);
+      case SINGLE:
+        return now.getYear() == occurrence.getYear() &&
+            now.getMonth() == occurrence.getMonth();
+      default:
+        return false;
+    }
+  }
+
+  private Instant atStartOfMonth(YearMonth monthInYear) {
+    return monthInYear.
+        atDay(1).
+        atStartOfDay().
+        atZone(ZoneId.systemDefault()).
+        toInstant();
+  }
+
+  private LocalDateTime asLocal(Instant instant) {
+
+    return instant.
+        atZone(ZoneId.systemDefault()).
+        toLocalDateTime();
   }
 
   private int getDaysInMonth(YearMonth monthInYear) {
