@@ -1,8 +1,5 @@
 package bg.softuni.tabula.event.dto;
 
-import bg.softuni.tabula.announcement.dto.AnnouncementDTO;
-import bg.softuni.tabula.announcement.dto.AnnouncementMapper;
-import bg.softuni.tabula.announcement.model.AnnouncementEntity;
 import bg.softuni.tabula.event.model.EventEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,4 +14,6 @@ public interface EventMapper {
 
   @Mapping(source = "occurrence", target = "eventTime")
   EventDTO mapEntityToDto(EventEntity entity);
+
+  EventDTO copy(EventDTO eventDTO);
 }

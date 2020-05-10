@@ -32,7 +32,13 @@ Welcome to events! Calendar with events is comming soon :-)
 
         <div th:unless="${day.getEvents().isEmpty()}">
           <div th:each="event: ${day.getEvents()}">
-            <span class="small" th:text="${event.getTitle()}"></span>
+            <div class="small">
+              <em th:text="${#dates.format(event.getEventTimeAsDate(), 'HH:mm')}"></em>
+              <span data-toggle="tooltip"
+                    th:title="${event.getDescription()}"
+                    th:text="${event.getTitle()}">
+              </span>
+            </div>
           </div>
         </div>
         <!-- EO: Events -->
@@ -51,6 +57,13 @@ Welcome to events! Calendar with events is comming soon :-)
 <!-- Bootstap JS -->
 <div th:replace="fragments/bootstrap-js :: bootstrap-js"></div>
 <!-- EO: Bootstap JS -->
+
+<!-- Enable tooltips -->
+<script>
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
 
 </body>
 </html>

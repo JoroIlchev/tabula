@@ -5,7 +5,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2020-05-10T12:10:03+0300",
+    date = "2020-05-10T15:58:00+0300",
     comments = "version: 1.3.1.Final, compiler: javac, environment: Java 11.0.1 (Oracle Corporation)"
 )
 public class EventMapperImpl implements EventMapper {
@@ -41,5 +41,21 @@ public class EventMapperImpl implements EventMapper {
         eventDTO.setEventType( entity.getEventType() );
 
         return eventDTO;
+    }
+
+    @Override
+    public EventDTO copy(EventDTO eventDTO) {
+        if ( eventDTO == null ) {
+            return null;
+        }
+
+        EventDTO eventDTO1 = new EventDTO();
+
+        eventDTO1.setEventTime( eventDTO.getEventTime() );
+        eventDTO1.setDescription( eventDTO.getDescription() );
+        eventDTO1.setTitle( eventDTO.getTitle() );
+        eventDTO1.setEventType( eventDTO.getEventType() );
+
+        return eventDTO1;
     }
 }

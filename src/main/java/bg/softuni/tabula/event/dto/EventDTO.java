@@ -1,8 +1,11 @@
 package bg.softuni.tabula.event.dto;
 
 import bg.softuni.tabula.event.model.EventType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -27,6 +30,15 @@ public class EventDTO {
 
   public LocalDateTime getEventTime() {
     return eventTime;
+  }
+
+  @JsonIgnore
+  public Date getEventTimeAsDate() {
+    if (getEventTime() == null) {
+      return null;
+    } else {
+      return Date.from(getEventTime().atZone(ZoneId.systemDefault()).toInstant());
+    }
   }
 
   public void setEventTime(LocalDateTime eventTime) {

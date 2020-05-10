@@ -7,6 +7,7 @@ import bg.softuni.tabula.event.dto.EventDTO;
 import bg.softuni.tabula.event.dto.EventMapper;
 import bg.softuni.tabula.event.dto.CalendarWeekDTO;
 import bg.softuni.tabula.event.model.EventEntity;
+import bg.softuni.tabula.event.model.EventType;
 import bg.softuni.tabula.event.repository.EventRepository;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -102,17 +103,43 @@ public class EventsService {
     relevantEvents.
         stream().
         filter(this::isRelevant).
-        forEach(relevantEvent -> {
-          // TODO: multiply weekly events
-          EventDTO event = EventMapper.INSTANCE.mapEntityToDto(relevantEvent);
+        map(EventMapper.INSTANCE::mapEntityToDto).
+        //TODO - adjust event times
+        forEach(eventDTO -> {
 
-          int eventDay = event.getEventTime().getDayOfMonth();
+          List<EventDTO> allEvents = multiply(eventDTO);
+          allEvents.forEach(e -> {
+            int eventDay = e.getEventTime().getDayOfMonth();
 
-          result.putIfAbsent(eventDay, new ArrayList<>());
-          result.get(eventDay).add(event);
+            result.putIfAbsent(eventDay, new ArrayList<>());
+            result.get(eventDay).add(e);
+          });
         });
 
     return result;
+  }
+
+  private List<EventDTO> multiply(EventDTO eventDTO) {
+    if (eventDTO.getEventType() == EventType.WEEKLY) {
+      // weekly events should be multiplied for each week.
+      List<EventDTO> result = new LinkedList<>();
+      EventDTO nextEventDTO = eventDTO;
+      do {
+        result.add(nextEventDTO);
+
+        LocalDateTime nextEventTime = nextEventDTO.getEventTime();
+        nextEventTime = nextEventTime.plusWeeks(1);
+        if (nextEventTime.getMonth() == eventDTO.getEventTime().getMonth()) {
+          nextEventDTO = EventMapper.INSTANCE.copy(nextEventDTO);
+          nextEventDTO.setEventTime(nextEventTime);
+        } else {
+          nextEventDTO = null;
+        }
+      } while(nextEventDTO != null);
+      return result;
+    } else {
+      return Collections.singletonList(eventDTO);
+    }
   }
 
   private boolean isRelevant(EventEntity event) {
