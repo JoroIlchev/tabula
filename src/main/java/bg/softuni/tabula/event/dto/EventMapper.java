@@ -10,6 +10,7 @@ public interface EventMapper {
 
   EventMapper INSTANCE = Mappers.getMapper(EventMapper.class);
 
+  @Mapping(source = "eventTime", target = "occurrence")
   EventEntity mapDtoToEntity(EventDTO dto);
 
   @Mapping(source = "occurrence", target = "eventTime")
