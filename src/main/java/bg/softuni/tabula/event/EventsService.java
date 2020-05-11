@@ -23,6 +23,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,23 +100,13 @@ public class EventsService {
         eventRepository.findAllRelevantEvents(
                   atStartOfMonth(monthInYear));
 
-    Map<Integer, List<EventDTO>> result = new HashMap<>();
-
-    relevantEvents.
+    Map<Integer, List<EventDTO>> result = relevantEvents.
         stream().
         filter(this::isRelevant).
         map(EventMapper.INSTANCE::mapEntityToDto).
+        flatMap(eventDTO -> multiply(eventDTO).stream()).
         //TODO - adjust event times
-        forEach(eventDTO -> {
-
-          List<EventDTO> allEvents = multiply(eventDTO);
-          allEvents.forEach(e -> {
-            int eventDay = e.getEventTime().getDayOfMonth();
-
-            result.putIfAbsent(eventDay, new ArrayList<>());
-            result.get(eventDay).add(e);
-          });
-        });
+        collect(Collectors.groupingBy(eventDTO -> eventDTO.getEventTime().getDayOfMonth()));
 
     return result;
   }
