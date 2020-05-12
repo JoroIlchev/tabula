@@ -3,6 +3,7 @@ package bg.softuni.tabula.event;
 import bg.softuni.tabula.event.dto.EventDTO;
 import bg.softuni.tabula.event.model.EventType;
 import java.time.LocalDateTime;
+import java.time.Year;
 import java.time.YearMonth;
 import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -24,19 +26,24 @@ public class EventController {
     this.eventsService = eventsService;
   }
 
-  @GetMapping
-  public String eventts(Model model) {
+  @GetMapping(value={"", "/{year}/{month}"})
+  public String events(Model model,
+      @PathVariable(required = false) Integer year,
+      @PathVariable(required = false) Integer month) {
 
-    //The truth is that we should take care about the
-    //time zone of the user, should be passed in here, but that's too much
+    YearMonth yearAndMonth;
+    if (year == null || month == null) {
+      yearAndMonth = YearMonth.now();
+    } else {
+      yearAndMonth = YearMonth.of(year, month);
+    }
+
+    //The bitter truth is that we should take care about the
+    //time zone of the user that should be passed in here, but that's too much
     //for the purpose of this project :-)
-    //TODO - should come as an arg
-    LocalDateTime now = LocalDateTime.now();
-
     model.addAttribute("active", "events");
-
     model.addAttribute("weeks", eventsService.
-        getEventsForMonth(YearMonth.of(now.getYear(), now.getMonth())));
+        getEventsForMonth(yearAndMonth));
     return "event/events";
   }
 

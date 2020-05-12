@@ -10,22 +10,18 @@ import bg.softuni.tabula.event.model.EventEntity;
 import bg.softuni.tabula.event.model.EventType;
 import bg.softuni.tabula.event.repository.EventRepository;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -96,13 +92,13 @@ public class EventsService {
   }
 
   private Map<Integer, List<EventDTO>> extractEvents(YearMonth monthInYear) {
+    // TODO: optimize the query to filter out most events.
     List<EventEntity> relevantEvents =
-        eventRepository.findAllRelevantEvents(
-                  atStartOfMonth(monthInYear));
+        eventRepository.findAll();
 
     Map<Integer, List<EventDTO>> result = relevantEvents.
         stream().
-        filter(this::isRelevant).
+        filter(e -> isRelevant(e, monthInYear)).
         map(EventMapper.INSTANCE::mapEntityToDto).
         flatMap(eventDTO -> multiply(eventDTO).stream()).
         //TODO - adjust event times
@@ -117,6 +113,8 @@ public class EventsService {
       List<EventDTO> result = new LinkedList<>();
       EventDTO nextEventDTO = eventDTO;
       do {
+        // FIXME - this algorithm is applicable for the current month,
+        // please rework
         result.add(nextEventDTO);
 
         LocalDateTime nextEventTime = nextEventDTO.getEventTime();
@@ -134,32 +132,25 @@ public class EventsService {
     }
   }
 
-  private boolean isRelevant(EventEntity event) {
+  private boolean isRelevant(EventEntity event, YearMonth monthInYear) {
 
     LocalDateTime occurrence = asLocal(event.getOccurrence());
-    LocalDateTime now = LocalDateTime.now();
+    LocalDateTime startOfShownMonth = monthInYear.atDay(1).atStartOfDay();
+    LocalDateTime endOfShownMonth = monthInYear.atEndOfMonth().atStartOfDay().plusDays(1);
 
     switch (event.getEventType()) {
       case ANNUALLY:
-        return !occurrence.with(firstDayOfMonth()).isAfter(now) &&
-            occurrence.getMonth() == now.getMonth();
+        return startOfShownMonth.isBefore(occurrence) &&
+            occurrence.getMonth() == startOfShownMonth.getMonth();
       case MONTHLY:
       case WEEKLY:
-        return !occurrence.with(firstDayOfMonth()).isAfter(now);
+        return occurrence.isBefore(endOfShownMonth);
       case SINGLE:
-        return now.getYear() == occurrence.getYear() &&
-            now.getMonth() == occurrence.getMonth();
+        return monthInYear.getYear() == occurrence.getYear() &&
+            monthInYear.getMonth() == occurrence.getMonth();
       default:
         return false;
     }
-  }
-
-  private Instant atStartOfMonth(YearMonth monthInYear) {
-    return monthInYear.
-        atDay(1).
-        atStartOfDay().
-        atZone(ZoneId.systemDefault()).
-        toInstant();
   }
 
   private LocalDateTime asLocal(Instant instant) {
