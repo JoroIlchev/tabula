@@ -1,7 +1,6 @@
 package bg.softuni.tabula.event;
 
-import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
-
+import static java.time.temporal.TemporalAdjusters.nextOrSame;
 import bg.softuni.tabula.event.dto.CalendarDayDTO;
 import bg.softuni.tabula.event.dto.EventDTO;
 import bg.softuni.tabula.event.dto.EventMapper;
@@ -9,6 +8,7 @@ import bg.softuni.tabula.event.dto.CalendarWeekDTO;
 import bg.softuni.tabula.event.model.EventEntity;
 import bg.softuni.tabula.event.model.EventType;
 import bg.softuni.tabula.event.repository.EventRepository;
+import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -48,7 +48,7 @@ public class EventsService {
 
   public List<CalendarWeekDTO> getEventsForMonth(YearMonth monthInYear) {
 
-    Map<Integer, List<EventDTO>> currentEvents = extractEvents(monthInYear);
+    Map<Integer, List<EventDTO>> currentEvents = extractCurrentEvents(monthInYear);
 
     List<CalendarWeekDTO> result = new ArrayList<>();
     CalendarWeekDTO currentWeek = new CalendarWeekDTO();
@@ -91,35 +91,39 @@ public class EventsService {
     return result;
   }
 
-  private Map<Integer, List<EventDTO>> extractEvents(YearMonth monthInYear) {
+  private Map<Integer, List<EventDTO>> extractCurrentEvents(YearMonth requestedMonth) {
     // TODO: optimize the query to filter out most events.
     List<EventEntity> relevantEvents =
         eventRepository.findAll();
 
-    Map<Integer, List<EventDTO>> result = relevantEvents.
+    return relevantEvents.
         stream().
-        filter(e -> isRelevant(e, monthInYear)).
+        filter(e -> isRelevant(e, requestedMonth)).
         map(EventMapper.INSTANCE::mapEntityToDto).
-        flatMap(eventDTO -> multiply(eventDTO).stream()).
-        //TODO - adjust event times
+        flatMap(eventDTO -> multiply(eventDTO, requestedMonth).stream()).
+        map(eventDTO -> adjustEventDate(eventDTO, requestedMonth)).
         collect(Collectors.groupingBy(eventDTO -> eventDTO.getEventTime().getDayOfMonth()));
-
-    return result;
   }
 
-  private List<EventDTO> multiply(EventDTO eventDTO) {
+  private EventDTO adjustEventDate(EventDTO event, YearMonth requestedMonth) {
+    LocalDateTime adjustedDateTime = event.getEventTime().
+        withYear(requestedMonth.getYear()).
+        withMonth(requestedMonth.getMonth().getValue());
+    event.setEventTime(adjustedDateTime);
+    return event;
+  }
+
+  private List<EventDTO> multiply(EventDTO eventDTO, YearMonth requestedMonth) {
     if (eventDTO.getEventType() == EventType.WEEKLY) {
-      // weekly events should be multiplied for each week.
+      // weekly events should be multiplied for each week of the month.
       List<EventDTO> result = new LinkedList<>();
-      EventDTO nextEventDTO = eventDTO;
+      EventDTO nextEventDTO = getFirstEvent(eventDTO, requestedMonth);
       do {
-        // FIXME - this algorithm is applicable for the current month,
-        // please rework
         result.add(nextEventDTO);
 
         LocalDateTime nextEventTime = nextEventDTO.getEventTime();
         nextEventTime = nextEventTime.plusWeeks(1);
-        if (nextEventTime.getMonth() == eventDTO.getEventTime().getMonth()) {
+        if (nextEventTime.getMonth() == requestedMonth.getMonth()) {
           nextEventDTO = EventMapper.INSTANCE.copy(nextEventDTO);
           nextEventDTO.setEventTime(nextEventTime);
         } else {
@@ -132,11 +136,42 @@ public class EventsService {
     }
   }
 
-  private boolean isRelevant(EventEntity event, YearMonth monthInYear) {
+  private EventDTO getFirstEvent(EventDTO eventDTO, YearMonth monthInYear) {
+    EventDTO result;
+    LocalDateTime eventTime = eventDTO.getEventTime();
+    if (eventTime.getMonth() == monthInYear.getMonth() &&
+        eventTime.getYear() == monthInYear.getYear()) {
+      // this is for the current month and year, should get in
+      result = eventDTO;
+    } else {
+      // move to the first day of week in the month
+      result = EventMapper.INSTANCE.copy(eventDTO);
+      DayOfWeek eventDayOfWeek = eventTime.getDayOfWeek();
+      LocalDateTime actualEventTime =
+          eventTime.
+              withMonth(monthInYear.getMonth().getValue()).
+              withYear(monthInYear.getYear()).
+              withDayOfMonth(1).
+              with(nextOrSame(eventDayOfWeek));
+      result.setEventTime(actualEventTime);
+    }
+    return result;
+  }
+
+  /**
+   * Filters the relevant events for the requested month. E.g. if the events are in
+   * the past they will be filtered out. E.g. single event in the past. Also annual event in
+   * the future.
+   *
+   * @param event
+   * @param requestedMonth
+   * @return
+   */
+  private boolean isRelevant(EventEntity event, YearMonth requestedMonth) {
 
     LocalDateTime occurrence = asLocal(event.getOccurrence());
-    LocalDateTime startOfShownMonth = monthInYear.atDay(1).atStartOfDay();
-    LocalDateTime endOfShownMonth = monthInYear.atEndOfMonth().atStartOfDay().plusDays(1);
+    LocalDateTime startOfShownMonth = requestedMonth.atDay(1).atStartOfDay();
+    LocalDateTime endOfShownMonth = requestedMonth.atEndOfMonth().atStartOfDay().plusDays(1);
 
     switch (event.getEventType()) {
       case ANNUALLY:
@@ -146,8 +181,8 @@ public class EventsService {
       case WEEKLY:
         return occurrence.isBefore(endOfShownMonth);
       case SINGLE:
-        return monthInYear.getYear() == occurrence.getYear() &&
-            monthInYear.getMonth() == occurrence.getMonth();
+        return requestedMonth.getYear() == occurrence.getYear() &&
+            requestedMonth.getMonth() == occurrence.getMonth();
       default:
         return false;
     }
