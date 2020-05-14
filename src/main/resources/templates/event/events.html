@@ -7,6 +7,10 @@
 <div th:replace="fragments/navbar :: navbar('events')">Navbar here</div>
 <!-- EO: Navbar -->
 
+
+<a th:href="@{/events/{year}/{month}(year=${previous.getYear()},month=${previous.getMonthValue()})}" class="btn btn-primary">Previous</a>
+<a th:href="@{/events/{year}/{month}(year=${next.getYear()},month=${next.getMonthValue()})}" class="btn btn-primary">Next</a>
+
 <div class="container">
 
   <!-- Weekdays header -->

@@ -31,6 +31,10 @@ public class EventController {
       @PathVariable(required = false) Integer year,
       @PathVariable(required = false) Integer month) {
 
+    //The bitter truth is that we should take care about the
+    //time zone of the user that should be passed in here, but that's too much
+    //for the purpose of this project :-)
+
     YearMonth yearAndMonth;
     if (year == null || month == null) {
       yearAndMonth = YearMonth.now();
@@ -38,12 +42,16 @@ public class EventController {
       yearAndMonth = YearMonth.of(year, month);
     }
 
-    //The bitter truth is that we should take care about the
-    //time zone of the user that should be passed in here, but that's too much
-    //for the purpose of this project :-)
+    // the active menu
     model.addAttribute("active", "events");
+    // the events, week by week
     model.addAttribute("weeks", eventsService.
         getEventsForMonth(yearAndMonth));
+
+    // the previous and next months
+    model.addAttribute("previous", yearAndMonth.minusMonths(1));
+    model.addAttribute("next", yearAndMonth.plusMonths(1));
+
     return "event/events";
   }
 

@@ -108,7 +108,7 @@ public class EventsService {
   private EventDTO adjustEventDate(EventDTO event, YearMonth requestedMonth) {
     LocalDateTime adjustedDateTime = event.getEventTime().
         withYear(requestedMonth.getYear()).
-        withMonth(requestedMonth.getMonth().getValue());
+        withMonth(requestedMonth.getMonthValue());
     event.setEventTime(adjustedDateTime);
     return event;
   }
@@ -149,7 +149,7 @@ public class EventsService {
       DayOfWeek eventDayOfWeek = eventTime.getDayOfWeek();
       LocalDateTime actualEventTime =
           eventTime.
-              withMonth(monthInYear.getMonth().getValue()).
+              withMonth(monthInYear.getMonthValue()).
               withYear(monthInYear.getYear()).
               withDayOfMonth(1).
               with(nextOrSame(eventDayOfWeek));
