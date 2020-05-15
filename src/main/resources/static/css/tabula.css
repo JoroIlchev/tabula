@@ -12,11 +12,15 @@
   transform: translate(-50%, -50%);
 }
 
-.calendar-day {
+.centered-text {
+  text-align: center
+}
+
+.margins-top-bottom {
   margin-top: 10px;
   margin-bottom: 10px;
 }
 
-.centered-text {
-  text-align: center
+.margin-left {
+  margin-left: 10px;
 }

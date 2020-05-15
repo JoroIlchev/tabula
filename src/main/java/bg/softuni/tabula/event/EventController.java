@@ -48,8 +48,9 @@ public class EventController {
     model.addAttribute("weeks", eventsService.
         getEventsForMonth(yearAndMonth));
 
-    // the previous and next months
+    // the previous, next and current months
     model.addAttribute("previous", yearAndMonth.minusMonths(1));
+    model.addAttribute("current", yearAndMonth);
     model.addAttribute("next", yearAndMonth.plusMonths(1));
 
     return "event/events";
