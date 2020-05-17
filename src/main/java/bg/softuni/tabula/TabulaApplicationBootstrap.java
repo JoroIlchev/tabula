@@ -7,6 +7,7 @@ import bg.softuni.tabula.announcement.repository.AnnouncementRepository;
 import bg.softuni.tabula.event.model.EventEntity;
 import bg.softuni.tabula.event.model.EventType;
 import bg.softuni.tabula.event.repository.EventRepository;
+import bg.softuni.tabula.user.RoleEntity;
 import bg.softuni.tabula.user.UserEntity;
 import bg.softuni.tabula.user.UserRepository;
 import java.time.DayOfWeek;
@@ -17,6 +18,7 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Random;
 import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,11 +43,33 @@ public class TabulaApplicationBootstrap implements CommandLineRunner {
 
     // pre-populating the app with some demo data.
 
-    // demo user
-    UserEntity lucho = new UserEntity();
-    lucho.setEmail("lucho@example.com");
-    lucho.setPasswordHash(new BCryptPasswordEncoder().encode("topsecret"));
-    userRepository.save(lucho);
+    // demo user - admin
+    UserEntity adminUser = new UserEntity();
+    adminUser.setEmail("lucho@example.com");
+    adminUser.setPasswordHash(new BCryptPasswordEncoder().encode("topsecret"));
+
+    RoleEntity adminRoleAdminUser = new RoleEntity();
+    adminRoleAdminUser.setRole("ROLE_ADMIN");
+
+    RoleEntity roleUserAminUser = new RoleEntity();
+    roleUserAminUser.setRole("ROLE_USER");
+
+    adminUser.setRoles(List.of(adminRoleAdminUser, roleUserAminUser));
+
+    userRepository.save(adminUser);
+
+    // normal user - admin
+    UserEntity normalUser = new UserEntity();
+    normalUser.setEmail("user@example.com");
+    normalUser.setPasswordHash(new BCryptPasswordEncoder().encode("topsecret"));
+
+    RoleEntity roleUserNormalUser = new RoleEntity();
+    roleUserNormalUser.setRole("ROLE_USER");
+
+    normalUser.setRoles(List.of(roleUserNormalUser));
+
+    userRepository.save(normalUser);
+
 
     AnnouncementEntity welcome = new AnnouncementEntity();
     welcome.setUpdatedOn(Instant.now());
