@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragments/head :: head"></head>
 <body>
 
 <!-- Behaviour -->
-<script>
+<script sec:authorize="hasRole('ADMIN')">
   $(document).on("click", ".open-delete-dialog", function () {
     $("#deleteId").val($(this).data('id'));
   });
@@ -33,7 +35,7 @@
             </em>
           </small>
         </div>
-        <div>
+        <div sec:authorize="hasRole('ADMIN')">
           <button type="button"
                   class="open-delete-dialog btn btn-primary"
                   data-toggle="modal"
@@ -51,12 +53,14 @@
   </div>
 </div>
 
-<a class="new-button btn btn-primary rounded-circle" th:href="@{/announcements/new}" role="button">
-  <i class="fas fa-plus"></i>
-</a>
+<div sec:authorize="hasRole('ADMIN')">
+  <a class="new-button btn btn-primary rounded-circle" th:href="@{/announcements/new}" role="button">
+    <i class="fas fa-plus"></i>
+  </a>
+</div>
 
 <!-- Delete announcement-->
-<div th:replace="announcement/delete :: delete-announcement">
+<div sec:authorize="hasRole('ADMIN')" th:replace="announcement/delete :: delete-announcement">
   Modal dialog for delete
 </div>
 <!-- EO: Delete announcement-->

@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragments/head :: head"></head>
 <body>
 
@@ -68,10 +70,11 @@
   <!-- EO: Ends the week row -->
 </div>
 
-<a class="new-button btn btn-primary rounded-circle" th:href="@{/events/new}" role="button">
-  <i class="fas fa-plus"></i>
-</a>
-
+<div sec:authorize="hasRole('ADMIN')">
+  <a class="new-button btn btn-primary rounded-circle" th:href="@{/events/new}" role="button">
+    <i class="fas fa-plus"></i>
+  </a>
+</div>
 <!-- Bootstap JS -->
 <div th:replace="fragments/bootstrap-js :: bootstrap-js"></div>
 <!-- EO: Bootstap JS -->

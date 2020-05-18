@@ -3,6 +3,7 @@ package bg.softuni.tabula.announcement;
 import bg.softuni.tabula.announcement.dto.AnnouncementDTO;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,11 +21,11 @@ public class AnnouncementController {
 
   @Autowired
   public AnnouncementController(AnnouncementService announcementService) {
-
     this.announcementService = announcementService;
   }
 
   @GetMapping
+  @PreAuthorize("hasRole('USER')")
   public String announcement(Model model) {
     model.addAttribute("active", "announcements");
     model.addAttribute("announcements",
@@ -33,6 +34,7 @@ public class AnnouncementController {
   }
 
   @GetMapping("/new")
+  @PreAuthorize("hasRole('ADMIN')")
   public String newAnnouncement(Model model) {
     model.addAttribute("active", "announcements");
     model.addAttribute("formData", new AnnouncementDTO());
@@ -40,6 +42,7 @@ public class AnnouncementController {
   }
 
   @PostMapping("/save")
+  @PreAuthorize("hasRole('ADMIN')")
   public String save(@Valid @ModelAttribute("formData") AnnouncementDTO announcementDTO,
       BindingResult bindingResult) {
 
@@ -53,6 +56,7 @@ public class AnnouncementController {
   }
 
   @DeleteMapping("/delete")
+  @PreAuthorize("hasRole('ADMIN')")
   public String delete(@ModelAttribute(name="deleteId") Long announcementId) {
 
     announcementService.deleteAnnouncement(announcementId);

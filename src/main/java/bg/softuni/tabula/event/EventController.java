@@ -2,10 +2,9 @@ package bg.softuni.tabula.event;
 
 import bg.softuni.tabula.event.dto.EventDTO;
 import bg.softuni.tabula.event.model.EventType;
-import java.time.LocalDateTime;
-import java.time.Year;
 import java.time.YearMonth;
 import javax.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -26,6 +25,7 @@ public class EventController {
     this.eventsService = eventsService;
   }
 
+  @PreAuthorize("hasRole('USER')")
   @GetMapping(value={"", "/{year}/{month}"})
   public String events(Model model,
       @PathVariable(required = false) Integer year,
@@ -57,6 +57,7 @@ public class EventController {
   }
 
   @GetMapping("/new")
+  @PreAuthorize("hasRole('ADMIN')")
   public String newEvent(Model model) {
     model.addAttribute("active", "events");
     model.addAttribute("eventTypes", EventType.values());
@@ -65,6 +66,7 @@ public class EventController {
   }
 
   @PostMapping("/save")
+  @PreAuthorize("hasRole('ADMIN')")
   public String save(
       @Valid @ModelAttribute("formData") EventDTO eventDTO,
       BindingResult bindingResult,
