@@ -2,6 +2,7 @@ package bg.softuni.tabula.config;
 
 import bg.softuni.tabula.user.OAuth2UserAuthSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -30,7 +31,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     http
         .authorizeRequests()
-        .antMatchers("/login**", "/favicon.ico").permitAll()
+        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+        .antMatchers("/login**").permitAll()
         .antMatchers("/**")
         .authenticated().
         and()
