@@ -28,10 +28,12 @@ public class EventEntity {
   @Column
   private String description;
 
+  @NotNull
   @Column(name="event_type")
   @Enumerated(EnumType.STRING)
   private EventType eventType;
 
+  @NotNull
   @Column(name="occurrence")
   private Instant occurrence;
 

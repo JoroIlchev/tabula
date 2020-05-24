@@ -29,94 +29,115 @@ import org.springframework.stereotype.Component;
 @Component
 public class TabulaApplicationBootstrap implements CommandLineRunner {
 
-  @Autowired
-  private UserRepository userRepository;
+  private final UserRepository userRepository;
 
-  @Autowired
-  private AnnouncementRepository announcementRepository;
+  private final AnnouncementRepository announcementRepository;
 
-  @Autowired
-  private EventRepository eventRepository;
+  private final EventRepository eventRepository;
+
+  public TabulaApplicationBootstrap(
+      UserRepository userRepository, AnnouncementRepository announcementRepository,
+      EventRepository eventRepository) {
+    this.userRepository = userRepository;
+    this.announcementRepository = announcementRepository;
+    this.eventRepository = eventRepository;
+  }
 
   @Override
   public void run(String... args) {
 
     // pre-populating the app with some demo data.
+    // this will not happen if the DB is NOT empty
+    createUsers();
+    createAnnouncements();
+    createEvents();
+  }
 
-    // demo user - admin
-    UserEntity adminUser = new UserEntity();
-    adminUser.setEmail("lucho@example.com");
-    adminUser.setPasswordHash(new BCryptPasswordEncoder().encode("topsecret"));
+  private void createEvents() {
+    if (eventRepository.count() == 0) {
+      // ANNUAL FOR THIS MONTH
+      EventEntity annualEvent = new EventEntity();
+      annualEvent.setTitle("The annual event happens here!");
+      annualEvent.setDescription("This is one little annual event");
+      annualEvent.setEventType(EventType.ANNUALLY);
+      annualEvent.setOccurrence(getRandomFromCurrentMonth());
+      eventRepository.save(annualEvent);
 
-    RoleEntity adminRoleAdminUser = new RoleEntity();
-    adminRoleAdminUser.setRole("ROLE_ADMIN");
+      // MONTHLY
+      EventEntity monthlyEvent = new EventEntity();
+      monthlyEvent.setTitle("The monthly event happens here!");
+      monthlyEvent.setDescription("This is one little monthly event");
+      monthlyEvent.setEventType(EventType.MONTHLY);
+      monthlyEvent.setOccurrence(getRandomFromCurrentMonth());
+      eventRepository.save(monthlyEvent);
 
-    RoleEntity roleUserAminUser = new RoleEntity();
-    roleUserAminUser.setRole("ROLE_USER");
+      //WEEKLY FOR THE SECOND WEEK
+      EventEntity weeklyEvent = new EventEntity();
+      weeklyEvent.setTitle("The weekly event happens here!");
+      weeklyEvent.setDescription("This is one little weekly event! Feel welcomed!");
+      weeklyEvent.setEventType(EventType.WEEKLY);
+      weeklyEvent.setOccurrence(getSecondWednesday());
+      eventRepository.save(weeklyEvent);
 
-    adminUser.setRoles(List.of(adminRoleAdminUser, roleUserAminUser));
+      //SINGLE FOR THE CURRENT DAY
+      EventEntity singleEvent = new EventEntity();
+      singleEvent.setTitle("The event for today!!!");
+      singleEvent.setDescription("This is one little single event! Feel welcomed!");
+      singleEvent.setEventType(EventType.SINGLE);
+      singleEvent.setOccurrence(Instant.now());
+      eventRepository.save(singleEvent);
 
-    userRepository.save(adminUser);
+      //ANOTHER SINGLE FOR THE CURRENT DAY, unless it is around midnight :-)
+      EventEntity anotherSingleEvent = new EventEntity();
+      anotherSingleEvent.setTitle("Another single event!");
+      anotherSingleEvent.setDescription("This is one more little single event! Feel welcomed!");
+      anotherSingleEvent.setEventType(EventType.SINGLE);
+      anotherSingleEvent.setOccurrence(Instant.now().plusSeconds(60 * 10));
+      eventRepository.save(anotherSingleEvent);
+    }
+  }
 
-    // normal user - admin
-    UserEntity normalUser = new UserEntity();
-    normalUser.setEmail("user@example.com");
-    normalUser.setPasswordHash(new BCryptPasswordEncoder().encode("topsecret"));
+  private void createAnnouncements() {
+    if (announcementRepository.count() == 0) {
+      AnnouncementEntity welcome = new AnnouncementEntity();
+      welcome.setUpdatedOn(Instant.now());
+      welcome.setCreatedOn(Instant.now());
+      welcome.setTitle("Spring Advanced");
+      welcome.setDescription("Welcome to the Spring Advanced Course!");
+      announcementRepository.save(welcome);
+    }
+  }
 
-    RoleEntity roleUserNormalUser = new RoleEntity();
-    roleUserNormalUser.setRole("ROLE_USER");
+  private void createUsers() {
 
-    normalUser.setRoles(List.of(roleUserNormalUser));
+    if (userRepository.count() == 0) {
+      // demo user - admin
+      UserEntity adminUser = new UserEntity();
+      adminUser.setEmail("lucho@example.com");
+      adminUser.setPasswordHash(new BCryptPasswordEncoder().encode("topsecret"));
 
-    userRepository.save(normalUser);
+      RoleEntity adminRoleAdminUser = new RoleEntity();
+      adminRoleAdminUser.setRole("ROLE_ADMIN");
 
+      RoleEntity roleUserAminUser = new RoleEntity();
+      roleUserAminUser.setRole("ROLE_USER");
 
-    AnnouncementEntity welcome = new AnnouncementEntity();
-    welcome.setUpdatedOn(Instant.now());
-    welcome.setCreatedOn(Instant.now());
-    welcome.setTitle("Spring Advanced");
-    welcome.setDescription("Welcome to the Spring Advanced Course!");
-    announcementRepository.save(welcome);
+      adminUser.setRoles(List.of(adminRoleAdminUser, roleUserAminUser));
 
-    // ANNUAL FOR THIS MONTH
-    EventEntity annualEvent = new EventEntity();
-    annualEvent.setTitle("The annual event happens here!");
-    annualEvent.setDescription("This is one little annual event");
-    annualEvent.setEventType(EventType.ANNUALLY);
-    annualEvent.setOccurrence(getRandomFromCurrentMonth());
-    eventRepository.save(annualEvent);
+      userRepository.save(adminUser);
 
-    // MONTHLY
-    EventEntity monthlyEvent = new EventEntity();
-    monthlyEvent.setTitle("The monthly event happens here!");
-    monthlyEvent.setDescription("This is one little monthly event");
-    monthlyEvent.setEventType(EventType.MONTHLY);
-    monthlyEvent.setOccurrence(getRandomFromCurrentMonth());
-    eventRepository.save(monthlyEvent);
+      // normal user - admin
+      UserEntity normalUser = new UserEntity();
+      normalUser.setEmail("user@example.com");
+      normalUser.setPasswordHash(new BCryptPasswordEncoder().encode("topsecret"));
 
-    //WEEKLY FOR THE SECOND WEEK
-    EventEntity weeklyEvent = new EventEntity();
-    weeklyEvent.setTitle("The weekly event happens here!");
-    weeklyEvent.setDescription("This is one little weekly event! Feel welcomed!");
-    weeklyEvent.setEventType(EventType.WEEKLY);
-    weeklyEvent.setOccurrence(getSecondWednesday());
-    eventRepository.save(weeklyEvent);
+      RoleEntity roleUserNormalUser = new RoleEntity();
+      roleUserNormalUser.setRole("ROLE_USER");
 
-    //SINGLE FOR THE CURRENT DAY
-    EventEntity singleEvent = new EventEntity();
-    singleEvent.setTitle("The event for today!!!");
-    singleEvent.setDescription("This is one little single event! Feel welcomed!");
-    singleEvent.setEventType(EventType.SINGLE);
-    singleEvent.setOccurrence(Instant.now());
-    eventRepository.save(singleEvent);
+      normalUser.setRoles(List.of(roleUserNormalUser));
 
-    //ANOTHER SINGLE FOR THE CURRENT DAY, unless it is around midnight :-)
-    EventEntity anotherSingleEvent = new EventEntity();
-    anotherSingleEvent.setTitle("Another single event!");
-    anotherSingleEvent.setDescription("This is one more little single event! Feel welcomed!");
-    anotherSingleEvent.setEventType(EventType.SINGLE);
-    anotherSingleEvent.setOccurrence(Instant.now().plusSeconds(60*10));
-    eventRepository.save(anotherSingleEvent);
+      userRepository.save(normalUser);
+    }
   }
 
   private Instant getSecondWednesday() {
