@@ -13,14 +13,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class HomeController {
 
   @GetMapping("/")
-  public String home(Model model, @AuthenticationPrincipal User user) {
-    model.addAttribute("user", user);
+  public String home(Model model) {
     return "home/home";
   }
 
   @GetMapping("/home")
-  public String homeAbsolute(Model model, @AuthenticationPrincipal User user) {
-    return home(model, user);
+  public String homeAbsolute(Model model) {
+    return home(model);
   }
 
   @PostMapping("/home")
