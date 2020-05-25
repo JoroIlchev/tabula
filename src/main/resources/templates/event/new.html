@@ -16,7 +16,7 @@
       <input type="text"
              placeholder="Title"
              class="form-control"
-             th:classappend="${#fields.hasErrors('title')}? 'is-invalid'"
+             th:errorclass="is-invalid"
              id="eventTitle"
              th:field="*{title}"/>
       <div class="invalid-feedback">
@@ -30,7 +30,7 @@
       <label for="eventDescription">Description</label>
       <textarea class="form-control"
                 placeholder="Description"
-                th:classappend="${#fields.hasErrors('description')}? 'is-invalid'"
+                th:errorclass="is-invalid"
                 id="eventDescription"
                 rows="5"
                 th:field="*{description}"></textarea>
@@ -47,7 +47,7 @@
           <label class="input-group-text" for="eventType">Event type</label>
         </div>
         <select
-            th:classappend="${#fields.hasErrors('eventType')}? 'is-invalid'"
+            th:errorclass="is-invalid"
             id="eventType"
             name="eventType">
           <option th:each="anEnventType : ${eventTypes}"
@@ -67,7 +67,7 @@
       <input type="datetime-local"
              id="eventTime"
              th:field="*{eventTime}"
-             th:classappend="${#fields.hasErrors('eventTime')}? 'is-invalid'"
+             th:errorclass="is-invalid"
              name="eventTime">
       <div class="invalid-feedback">
         Event type should be specified and should be in the future.
