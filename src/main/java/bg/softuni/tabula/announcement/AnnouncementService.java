@@ -4,15 +4,16 @@ import bg.softuni.tabula.announcement.dto.AnnouncementDTO;
 import bg.softuni.tabula.announcement.dto.AnnouncementMapper;
 import bg.softuni.tabula.announcement.model.AnnouncementEntity;
 import bg.softuni.tabula.announcement.repository.AnnouncementRepository;
-import bg.softuni.tabula.user.UserService;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@AllArgsConstructor
 @Service
 public class AnnouncementService {
 
@@ -20,11 +21,6 @@ public class AnnouncementService {
 
   private final AnnouncementRepository announcementRepository;
 
-  @Autowired
-  public AnnouncementService(AnnouncementRepository announcementRepository) {
-
-    this.announcementRepository = announcementRepository;
-  }
 
   public void updateOrCreateAnnouncement(AnnouncementDTO announcementDTO) {
 

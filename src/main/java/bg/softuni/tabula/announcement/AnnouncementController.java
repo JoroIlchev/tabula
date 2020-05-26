@@ -2,7 +2,8 @@ package bg.softuni.tabula.announcement;
 
 import bg.softuni.tabula.announcement.dto.AnnouncementDTO;
 import javax.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,16 +14,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+@AllArgsConstructor
 @Controller
 @RequestMapping("/announcements")
 public class AnnouncementController {
 
   private final AnnouncementService announcementService;
 
-  @Autowired
-  public AnnouncementController(AnnouncementService announcementService) {
-    this.announcementService = announcementService;
-  }
 
   @GetMapping
   @PreAuthorize("hasRole('USER')")

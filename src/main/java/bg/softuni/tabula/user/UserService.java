@@ -1,10 +1,13 @@
 package bg.softuni.tabula.user;
 
 import java.util.Optional;
+
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class UserService {
 
@@ -12,9 +15,6 @@ public class UserService {
 
   private final UserRepository userRepository;
 
-  public UserService(UserRepository userRepository) {
-    this.userRepository = userRepository;
-  }
 
   public UserEntity getOrCreateUser(String email) {
 

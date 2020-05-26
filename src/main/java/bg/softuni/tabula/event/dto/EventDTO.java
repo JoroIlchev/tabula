@@ -9,8 +9,15 @@ import java.util.Date;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
+@Getter
+@Setter
+@ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EventDTO {
 
@@ -28,10 +35,6 @@ public class EventDTO {
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private LocalDateTime eventTime;
 
-  public LocalDateTime getEventTime() {
-    return eventTime;
-  }
-
   @JsonIgnore
   public Date getEventTimeAsDate() {
     if (getEventTime() == null) {
@@ -39,43 +42,5 @@ public class EventDTO {
     } else {
       return Date.from(getEventTime().atZone(ZoneId.systemDefault()).toInstant());
     }
-  }
-
-  public void setEventTime(LocalDateTime eventTime) {
-    this.eventTime = eventTime;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
-  public EventType getEventType() {
-    return eventType;
-  }
-
-  public void setEventType(EventType eventType) {
-    this.eventType = eventType;
-  }
-
-  @Override
-  public String toString() {
-    return "EventDTO{" +
-        "title='" + title + '\'' +
-        ", description='" + description + '\'' +
-        ", eventType=" + eventType +
-        ", eventTime=" + eventTime +
-        '}';
   }
 }

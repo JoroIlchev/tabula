@@ -1,6 +1,7 @@
 package bg.softuni.tabula.config;
 
 import bg.softuni.tabula.user.OAuth2UserAuthSuccessHandler;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Configuration;
@@ -12,16 +13,15 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+@AllArgsConstructor
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-  @Autowired
-  private UserDetailsService userDetailsService;
+  private final UserDetailsService userDetailsService;
 
-  @Autowired
-  private OAuth2UserAuthSuccessHandler oAuth2UserAuthSuccessHandler;
+  private final OAuth2UserAuthSuccessHandler oAuth2UserAuthSuccessHandler;
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {

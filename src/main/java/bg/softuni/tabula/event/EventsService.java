@@ -10,7 +10,6 @@ import bg.softuni.tabula.event.model.EventType;
 import bg.softuni.tabula.event.repository.EventRepository;
 import java.time.DayOfWeek;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.ZoneId;
@@ -22,10 +21,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+@AllArgsConstructor
 @Service
 public class EventsService {
 
@@ -33,10 +34,6 @@ public class EventsService {
 
   private final EventRepository eventRepository;
 
-  public EventsService(EventRepository eventRepository) {
-
-    this.eventRepository = eventRepository;
-  }
 
   public void updateOrCreateEvent(EventDTO eventDTO){
 

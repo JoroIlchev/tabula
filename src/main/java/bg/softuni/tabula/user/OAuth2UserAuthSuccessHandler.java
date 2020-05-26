@@ -2,17 +2,18 @@ package bg.softuni.tabula.user;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+@AllArgsConstructor
 @Component
 public class OAuth2UserAuthSuccessHandler implements AuthenticationSuccessHandler {
 
-  @Autowired
-  private UserService userService;
+  private final UserService userService;
 
   @Override
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
