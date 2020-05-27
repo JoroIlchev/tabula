@@ -4,6 +4,8 @@ import bg.softuni.tabula.event.dto.EventDTO;
 import bg.softuni.tabula.event.model.EventType;
 import java.time.YearMonth;
 import javax.validation.Valid;
+
+import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,15 +17,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+@AllArgsConstructor
 @RequestMapping("/events")
 @Controller
 public class EventController {
 
-  private EventsService eventsService;
+  private final EventsService eventsService;
 
-  public EventController(EventsService eventsService) {
-    this.eventsService = eventsService;
-  }
 
   @PreAuthorize("hasRole('USER')")
   @GetMapping(value={"", "/{year}/{month}"})

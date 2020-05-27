@@ -12,20 +12,18 @@ import bg.softuni.tabula.user.UserEntity;
 import bg.softuni.tabula.user.UserRepository;
 import java.time.DayOfWeek;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.YearMonth;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
-import org.apache.tomcat.jni.Local;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+@RequiredArgsConstructor
 @Component
 public class TabulaApplicationBootstrap implements CommandLineRunner {
 
@@ -35,13 +33,6 @@ public class TabulaApplicationBootstrap implements CommandLineRunner {
 
   private final EventRepository eventRepository;
 
-  public TabulaApplicationBootstrap(
-      UserRepository userRepository, AnnouncementRepository announcementRepository,
-      EventRepository eventRepository) {
-    this.userRepository = userRepository;
-    this.announcementRepository = announcementRepository;
-    this.eventRepository = eventRepository;
-  }
 
   @Override
   public void run(String... args) {

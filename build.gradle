@@ -6,7 +6,11 @@ plugins {
 
 group = 'bg.softuni'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_11
+	targetCompatibility = JavaVersion.VERSION_11
+}
 
 repositories {
 	mavenCentral()
@@ -20,7 +24,9 @@ configurations {
 }
 
 ext {
-	mysqlConnectorVersion = '8.0.20'
+	mysqlConnectorVersion = "8.0.20"
+	mapStructVersion = "1.3.1.Final"
+	lombokVersion = "1.18.12"
 }
 
 dependencies {
@@ -28,17 +34,20 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.mapstruct:mapstruct:1.3.1.Final'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.security:spring-security-oauth2-client'
-	implementation 'org.liquibase:liquibase-core'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.liquibase:liquibase-core'
 
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.3.1.Final'
+	compileOnly "org.mapstruct:mapstruct:${mapStructVersion}"
+	compileOnly "org.projectlombok:lombok:${lombokVersion}"
+
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"
+	annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-	runtime("mysql:mysql-connector-java:${mysqlConnectorVersion}")
+	runtimeOnly "mysql:mysql-connector-java:${mysqlConnectorVersion}"
 
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
