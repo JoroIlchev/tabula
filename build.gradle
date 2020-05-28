@@ -33,6 +33,17 @@ ext {
 	bootstrapVersion = '4.5.0'
 }
 
+dependencyManagement {
+	dependencies {
+		dependencySet(group:'org.mapstruct', version: "${mapStructVersion}") {
+			entry 'mapstruct'
+			entry 'mapstruct-processor'
+		}
+		dependency "org.projectlombok:lombok:${lombokVersion}"
+		dependency "mysql:mysql-connector-java:${mysqlConnectorVersion}"
+	}
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
@@ -48,15 +59,14 @@ dependencies {
 	compileOnly "org.webjars:popper.js:${popperJsVersion}"
 	compileOnly "org.webjars:bootstrap:${bootstrapVersion}"
 
-	compileOnly "org.mapstruct:mapstruct:${mapStructVersion}"
-	compileOnly "org.projectlombok:lombok:${lombokVersion}"
-
-	annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"
-	annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+	compileOnly "org.mapstruct:mapstruct"
+	compileOnly "org.projectlombok:lombok"
+	annotationProcessor "org.mapstruct:mapstruct-processor"
+	annotationProcessor "org.projectlombok:lombok"
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-	runtimeOnly "mysql:mysql-connector-java:${mysqlConnectorVersion}"
+	runtimeOnly "mysql:mysql-connector-java"
 
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
