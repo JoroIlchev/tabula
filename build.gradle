@@ -27,6 +27,10 @@ ext {
 	mysqlConnectorVersion = "8.0.20"
 	mapStructVersion = "1.3.1.Final"
 	lombokVersion = "1.18.12"
+	webjarsLocatorVersion = '0.40'
+	jQueryVersion = '3.5.1'
+	popperJsVersion = '2.0.2'
+	bootstrapVersion = '4.5.0'
 }
 
 dependencyManagement {
@@ -50,9 +54,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.liquibase:liquibase-core'
 
+	compileOnly "org.webjars:webjars-locator:${webjarsLocatorVersion}"
+	compileOnly "org.webjars:jquery:${jQueryVersion}"
+	compileOnly "org.webjars:popper.js:${popperJsVersion}"
+	compileOnly "org.webjars:bootstrap:${bootstrapVersion}"
+
 	compileOnly "org.mapstruct:mapstruct"
 	compileOnly "org.projectlombok:lombok"
-
 	annotationProcessor "org.mapstruct:mapstruct-processor"
 	annotationProcessor "org.projectlombok:lombok"
 
