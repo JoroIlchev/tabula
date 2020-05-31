@@ -50,8 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         and().
           oauth2Login().
           loginPage("/login").
-          successHandler(oAuth2UserAuthSuccessHandler).
-          defaultSuccessUrl("/home");
+          successHandler(oAuth2UserAuthSuccessHandler);
   }
 
   @Autowired

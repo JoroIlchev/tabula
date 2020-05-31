@@ -1,5 +1,6 @@
 package bg.softuni.tabula.user;
 
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,6 +28,7 @@ public class UserEntity {
   @Column(name = "id", nullable = false, updatable = false)
   private long id;
 
+  @NotNull
   @Column(name = "email", nullable = false, unique = true)
   private String email;
 

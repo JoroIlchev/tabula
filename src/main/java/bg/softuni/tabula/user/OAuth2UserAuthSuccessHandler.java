@@ -1,23 +1,41 @@
 package bg.softuni.tabula.user;
 
+import java.io.IOException;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-@AllArgsConstructor
 @Component
-public class OAuth2UserAuthSuccessHandler implements AuthenticationSuccessHandler {
+public class OAuth2UserAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
   private final UserService userService;
+  private final UserDetailsService userDetailsService;
+
+  public OAuth2UserAuthSuccessHandler(UserService userService,
+      UserDetailsService userDetailsService) {
+    this.userService = userService;
+    this.userDetailsService = userDetailsService;
+
+    // this might be configurable
+    setDefaultTargetUrl("/home");
+  }
 
   @Override
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-      Authentication authentication) {
+      Authentication authentication) throws ServletException, IOException {
 
     if (authentication instanceof OAuth2AuthenticationToken) {
       OAuth2AuthenticationToken oAuth2AuthenticationToken =
@@ -28,11 +46,19 @@ public class OAuth2UserAuthSuccessHandler implements AuthenticationSuccessHandle
               getPrincipal().
               getAttribute("email");
 
-      userService.getOrCreateUser(email);
-      //TODO - clean up authentication...
-    } else {
-      //TODO - should not be here, maybe clean up auth and move on to login page.
+      UserEntity userEntity = userService.getOrCreateUser(email);
+      //should not be null
+      UserDetails userDetails = userDetailsService.loadUserByUsername(userEntity.getEmail());
+
+      authentication = new
+          UsernamePasswordAuthenticationToken(
+              userDetails,
+              null,
+          userDetails.getAuthorities()
+      );
+      SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
+    super.onAuthenticationSuccess(request, response, authentication);
   }
 }

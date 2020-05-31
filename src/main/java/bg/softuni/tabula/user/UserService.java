@@ -1,5 +1,6 @@
 package bg.softuni.tabula.user;
 
+import java.util.List;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,10 @@ public class UserService {
 
     UserEntity userEntity = new UserEntity();
     userEntity.setEmail(email);
+
+    RoleEntity userRole = new RoleEntity().setRole("ROLE_USER");
+    userEntity.setRoles(List.of(userRole));
+
     return userRepository.save(userEntity);
   }
 }

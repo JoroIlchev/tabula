@@ -46,8 +46,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         map(r -> new SimpleGrantedAuthority(r.getRole())).
         collect(Collectors.toList());
 
-    return new User(user.getEmail(),
-        user.getPasswordHash(),
+    User result = new User(user.getEmail(),
+        user.getPasswordHash() != null ? user.getPasswordHash() : "",
         authorities);
+
+    if (user.getPasswordHash() == null){
+      result.eraseCredentials();
+    }
+
+    return result;
   }
 }
