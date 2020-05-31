@@ -25,6 +25,18 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+  resources:
+    cache:
+      cachecontrol:
+        max-age: 30d
+    chain:
+      strategy:
+        content:
+          enabled: true
+          paths: /css/**
+server:
+  compression:
+    enabled: true
 logging:
   level:
     org.springframework.web: DEBUG
