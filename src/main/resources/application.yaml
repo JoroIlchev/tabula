@@ -17,8 +17,7 @@ spring:
         registration:
           facebook:
             client-id: 596493257866350
-            #TODO - hide this as env variable
-            client-secret: senko
+            client-secret: 94406040e61d257c47ec385fc253dc4c
   thymeleaf:
     cache: false
   mvc:
