@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @AllArgsConstructor
 @Configuration
@@ -23,6 +24,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final OAuth2UserAuthSuccessHandler oAuth2UserAuthSuccessHandler;
 
+  private final PasswordEncoder passwordEncoder;
+
   @Override
   protected void configure(HttpSecurity http) throws Exception {
 
@@ -32,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http
         .authorizeRequests()
         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-        .antMatchers("/login**", "/login-error**").permitAll()
+        .antMatchers("/login**", "/login-error**", "/registration").permitAll()
         .antMatchers("/**")
         .authenticated().
         and()
@@ -57,6 +60,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   public void configureGlobal(AuthenticationManagerBuilder auth)
       throws Exception {
     auth.userDetailsService(userDetailsService).passwordEncoder(
-        new BCryptPasswordEncoder());
+        passwordEncoder);
   }
 }
