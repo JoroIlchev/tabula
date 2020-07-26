@@ -8,6 +8,7 @@ import bg.softuni.tabula.event.dto.CalendarWeekDTO;
 import bg.softuni.tabula.event.model.EventEntity;
 import bg.softuni.tabula.event.model.EventType;
 import bg.softuni.tabula.event.repository.EventRepository;
+import bg.softuni.tabula.event.util.TimeUtil;
 import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -50,8 +51,8 @@ public class EventsService {
     List<CalendarWeekDTO> result = new ArrayList<>();
     CalendarWeekDTO currentWeek = new CalendarWeekDTO();
 
-    int daysInMonth = getDaysInMonth(monthInYear);
-    int dayInWeek = getFirstDayInWeek(monthInYear);
+    int daysInMonth = TimeUtil.getDaysInMonth(monthInYear);
+    int dayInWeek = TimeUtil.getFirstDayInWeek(monthInYear);
 
     // fill with empty cells at the start of the month
     for (int currentWeekDay = 0; currentWeekDay < dayInWeek; currentWeekDay++) {
@@ -89,11 +90,10 @@ public class EventsService {
   }
 
   private Map<Integer, List<EventDTO>> extractCurrentEvents(YearMonth requestedMonth) {
-    // TODO: optimize the query to filter out most events.
-    List<EventEntity> relevantEvents =
+    List<EventEntity> allEvents =
         eventRepository.findAll();
 
-    return relevantEvents.
+    return allEvents.
         stream().
         filter(e -> isRelevant(e, requestedMonth)).
         map(EventMapper.INSTANCE::mapEntityToDto).
@@ -164,16 +164,19 @@ public class EventsService {
    * @param requestedMonth
    * @return
    */
-  private boolean isRelevant(EventEntity event, YearMonth requestedMonth) {
+  static boolean isRelevant(EventEntity event, YearMonth requestedMonth) {
 
-    LocalDateTime occurrence = asLocal(event.getOccurrence());
+    LocalDateTime occurrence = TimeUtil.asLocal(event.getOccurrence());
     LocalDateTime startOfShownMonth = requestedMonth.atDay(1).atStartOfDay();
     LocalDateTime endOfShownMonth = requestedMonth.atEndOfMonth().atStartOfDay().plusDays(1);
 
     switch (event.getEventType()) {
       case ANNUALLY:
-        return startOfShownMonth.isBefore(occurrence) &&
-            occurrence.getMonth() == startOfShownMonth.getMonth();
+        if (occurrence.getMonth() != requestedMonth.getMonth())
+          return false;
+        if (occurrence.withYear(requestedMonth.getYear()).getDayOfMonth() != occurrence.getDayOfMonth())
+          return false;//leap year check
+        return occurrence.getYear() <= requestedMonth.getYear();
       case MONTHLY:
       case WEEKLY:
         return occurrence.isBefore(endOfShownMonth);
@@ -184,25 +187,4 @@ public class EventsService {
         return false;
     }
   }
-
-  private LocalDateTime asLocal(Instant instant) {
-
-    return instant.
-        atZone(ZoneId.systemDefault()).
-        toLocalDateTime();
-  }
-
-  private int getDaysInMonth(YearMonth monthInYear) {
-    return (int)ChronoUnit.DAYS.between(
-        monthInYear.atDay(1),
-        monthInYear.atDay(1).plusMonths(1));
-  }
-
-  private int getFirstDayInWeek(YearMonth monthInYear) {
-    return monthInYear.
-        atDay(1).
-        getDayOfWeek().
-        getValue() - 1;
-  }
-
 }
