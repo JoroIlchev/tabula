@@ -30,10 +30,16 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
     valid = firstObj == null && secondObj == null || firstObj != null && firstObj.equals(secondObj);
 
     if (!valid) {
-      context.buildConstraintViolationWithTemplate(message)
-          .addPropertyNode(firstFieldName)
-          .addConstraintViolation()
-          .disableDefaultConstraintViolation();
+      context.
+          buildConstraintViolationWithTemplate(message)
+            .addPropertyNode(firstFieldName)
+            .addConstraintViolation().
+          buildConstraintViolationWithTemplate(message).
+            addPropertyNode(secondFieldName).
+            addConstraintViolation().
+          disableDefaultConstraintViolation();
+
+
     }
 
     return valid;

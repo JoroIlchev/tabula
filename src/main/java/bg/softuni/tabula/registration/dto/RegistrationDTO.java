@@ -20,33 +20,6 @@ public class RegistrationDTO {
   @NotBlank
   private String confirmPassword;
 
-  public String getEmail() {
-    return email;
-  }
-
-  public RegistrationDTO setEmail(String email) {
-    this.email = email;
-    return this;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public RegistrationDTO setPassword(String password) {
-    this.password = password;
-    return this;
-  }
-
-  public String getConfirmPassword() {
-    return confirmPassword;
-  }
-
-  public RegistrationDTO setConfirmPassword(String confirmPassword) {
-    this.confirmPassword = confirmPassword;
-    return this;
-  }
-
   @Override
   public String toString() {
     return "RegistrationDTO{" +
